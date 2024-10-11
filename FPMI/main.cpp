@@ -1,32 +1,40 @@
 #include <iostream>
-#include <array>
 
-//non_types templates parameters
-
-template<typename T, size_t N>
-class array {
-    T a[N];
-public:
-
+template<int N>
+struct Fibonacci {
+    static const long long value = Fibonacci<N-1>::value + Fibonacci<N-2>::value;
 };
 
-template<typename T, T* P>
-struct MyStruct {
-
+template<>
+struct Fibonacci<1>
+{
+    static const long long value =1;
 };
 
-template<typename Field,size_t M, size_t N>
-class Matrix {
-
+template<>
+struct Fibonacci<0>
+{
+    static const long long value =0;
 };
 
-template<typename Field,size_t M,size_t N,size_t K>
-Matrix<Field,M,K> operator*(const Matrix<Field,M,N>&,const Matrix<Field,N,K>&);
+template<size_t N,size_t D>
+struct IsPrimeHelper {
+    static const bool value = N % D == 0 ? false : IsPrimeHelper<N,D-1>::value;
+};
+
+template<size_t N>
+struct IsPrimeHelper<N,1> {
+    static const bool value = true;
+};
+
+template<size_t N>
+struct IsPrime {
+    static const bool value = IsPrimeHelper<N,N-1>::value;
+};
 
 
 int main() {
-    std::array<int,10> a;
-   // std::array<int,15> b = a;
-
-    return 0;
-} 
+    std::cout << IsPrime<17>::value << '\n';
+    std::cout << IsPrime<25>::value << '\n';
+    std::cout << IsPrime<2017>::value << '\n';
+}
