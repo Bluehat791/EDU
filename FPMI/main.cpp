@@ -1,40 +1,83 @@
-#include <iostream>
+#include<iostream>
+#include<type_traits> //since c++11
+//basic type traits
 
-template<int N>
-struct Fibonacci {
-    static const long long value = Fibonacci<N-1>::value + Fibonacci<N-2>::value;
+
+template<typename T,typename U>
+const bool is_same_v = is_same<T,U>::value
+
+template<typename T>
+struct remove_const {
+    using type = T;
 };
 
-template<>
-struct Fibonacci<1>
+template<typename T>
+struct remove_const_t<const T> {
+    using type = T;
+};
+
+template<typename T>
+using remove_const_t = remove_const<T>::type;
+
+//
+template<typename T>
+struct remove_reference {
+    using type = T;
+};
+
+template<typename T>
+struct remove_reference<T&> {
+    using type = T;
+};
+
+template<typename T>
+using remove_reference_t = remove_reference<T>::type;
+//
+template<typename T>
+struct remove_extent {
+    using type = T;
+};
+
+template<typename T>
+struct remove_extent<T[]> {
+    using type = T;
+};
+
+template<typename T>
+using remove_extent_t = remove_extend<T>::type;
+//////////
+
+
+/// 
+/// 
+///  
+template<typename T, typename U>
+struct is_same 
 {
-    static const long long value =1;
+    static const bool value = false;
 };
 
-template<>
-struct Fibonacci<0>
+template<typename T>
+struct is_same<T,T> 
 {
-    static const long long value =0;
+    static const bool value = false;
 };
 
-template<size_t N,size_t D>
-struct IsPrimeHelper {
-    static const bool value = N % D == 0 ? false : IsPrimeHelper<N,D-1>::value;
-};
+template<typename T>
+void g(T x) {
 
-template<size_t N>
-struct IsPrimeHelper<N,1> {
-    static const bool value = true;
-};
+    std::decay_t<T>
+    std::remove_const<T>::type y = x;
+}
 
-template<size_t N>
-struct IsPrime {
-    static const bool value = IsPrimeHelper<N,N-1>::value;
-};
+template<typename T,typename U>
+void f(T x, U y) {
+
+    std::cout << (std::is_same_v::value ? 1 : 2);
 
 
-int main() {
-    std::cout << IsPrime<17>::value << '\n';
-    std::cout << IsPrime<25>::value << '\n';
-    std::cout << IsPrime<2017>::value << '\n';
+}
+
+int main(){
+
 }
