@@ -1,94 +1,71 @@
-#include <iostream> 
-#include <vector>
-#include <deque>
+#include <iostream>
 
-using namespace std;
-template <typename T, typename Container = std::deque<T>>
-class Queue{
-public:
-    Queue(){}
-
-    const typename Container::const_iterator& front() const {
-        return data.front();
-    }
-
-    typename Container::iterator& front() {
-        return data.front();
-    }
-
-    void pop(){
-        data.pop();
-    }
-
-    void push(T value){
-        data.push_back(value);
-    }
-
-    size_t size(){
-        return data.size();
-    }
-
-    bool empty(){
-        return data.empty();
-    }
-
-    template <typename T2>
-    bool operator == (const Queue<T2>& other) const {
-        if (this->size() != other.size()) {
-            return false;
-        }
-        for (size_t i = 0; i != this->size(); ++i) {
-                if (!(*this)[i] == other[i]) {
-                    return false;
-                }
-        }
-        return true;
-    }
-
-    template <typename T2>
-    bool operator != (const Queue<T2>& other) const {
-        if (this->size() != other.size()) {
-            return !false;
-        }
-        for (size_t i = 0; i != this->size(); ++i) {
-                if (!(*this)[i] == other[i]) {
-                    return true;
-                }
-        }
-        return true;
-    }
-
-    T& operator[](size_t x){
-        return data.at(x);
-    }
-
-    const T& operator[](size_t x) const{
-        return data.at(x);
-    }
-
-    ~Queue();
-
-
+template <typename T, int size>
+class StaticArray
+{
 private:
-    Container data;
+	T m_array[size]{};
 
+public:
+	T* getArray() { return m_array; }
+
+	const T& operator[](int index) const { return m_array[index]; }
+	T& operator[](int index) { return m_array[index]; }
+
+	void print() const;
 };
 
-int main() {
+template <typename T, int size>
+void StaticArray<T, size>::print() const
+{
+	for (int i{ 0 }; i < size; ++i)
+		std::cout << m_array[i] << ' ';
+	std::cout << '\n';
+}
 
-    Queue<int> q;
-    for (size_t i = 0; i < 10; i++)
-    {
-        q.push(i);
-    }
+// Partially specialized class
+template <int size>
+class StaticArray<double, size>
+{
+private:
+	double m_array[size]{};
 
-    for (size_t i = 0; i < 10; i++)
-    {
-        std::cout << q[i];
-    }
+public:
+	double* getArray() { return m_array; }
 
-    std::deque<int>::iterator  it = q.front();
-    std::cout << *it << '\n';
-    std::cout << q.empty() << '\n';
-    
+	const double& operator[](int index) const { return m_array[index]; }
+	double& operator[](int index) { return m_array[index]; }
+
+	void print() const;
+};
+
+// Member function of partially specialized class
+template <int size>
+void StaticArray<double, size>::print() const
+{
+	for (int i{ 0 }; i < size; ++i)
+		std::cout << std::scientific << m_array[i] << ' ';
+	std::cout << '\n';
+}
+
+int main()
+{
+	// declare an integer array with room for 6 integers
+	StaticArray<int, 6> intArray{};
+
+	// Fill it up in order, then print it
+	for (int count{ 0 }; count < 6; ++count)
+		intArray[count] = count;
+
+	intArray.print();
+
+	// declare a double buffer with room for 4 doubles
+	StaticArray<double, 4> doubleArray{};
+
+	for (int count{ 0 }; count < 4; ++count)
+		doubleArray[count] = (4.0 + 0.1 * count);
+
+	doubleArray.print();
+
+	return 0;
 }

@@ -1,33 +1,38 @@
 #include<iostream>
-#include<type_traits>
 
-//variadic templates
+//virtual inheritance
 
-template<typename First, typename Second,typename... Tail>
-struct is_homogeneous {
-    static const bool value = std::is_same_v<First,Second> && is_homogeneous<Second,Tail...>::value;
+struct Granny {
+    int g = 0;
 };
 
-template<typename T,typename U>
-struct is_homogeneous<T,U> {
-    static const bool value = std::is_same<T,U>;
+struct Mom : public virtual Granny
+{
+    int m =1;
 };
 
+struct Dad : public virtual Granny
+{
+    int d =2;
+};
 
+struct Son : public Mom, public Dad
+{
+    int s = 3;
+};
 
-void print() {}
-
-
-template <typename Head, typename... Tail>
-void print(const Head& head, const Tail&... tail) {
-    std::cout << head << ' ';
-    print(tail...);
-}
-
+// [Mom::g][Mom::m][Dad::d][Sons::s]
+// [mom_ptr][Mom:m][dad_ptr][Dad::d][Sons::s][Granny::g]
 int main(){
-    //print(1,2,3,"afesd",3,0);
+    Son s;
+    Dad* pd = &s;
+    pd->g;
 
-    std::cout << is_homogeneous<int,int,int>::value << '\n';
-    std::cout << is_homogeneous<int,char,double>::value << '\n';
+    std::cout << &s << "\n";
+    std::cout << &s.Dad::d << " " << &s.Mom::m << '\n';
+    std::cout << &s.Dad::g << " " << &s.Mom::g << '\n';
 
+    Granny& g = s;
+    std::cout << sizeof(s) << '\n';
+    return 0;
 }
