@@ -2,60 +2,46 @@
 #include <vector>
 #include <deque>
 
+
 using namespace std;
 template <typename T, typename Container = std::deque<T>>
 class Queue{
 public:
     Queue(){}
 
-    const typename Container::const_iterator& front() const {
+    const typename Container::const_reference front() const {
         return data.front();
     }
 
-    typename Container::iterator& front() {
+    typename Container::reference front() {
         return data.front();
     }
 
     void pop(){
-        data.pop();
+        data.pop_back();
     }
 
     void push(T value){
         data.push_back(value);
     }
 
-    size_t size(){
+    size_t size() const{
         return data.size();
     }
 
     bool empty(){
         return data.empty();
     }
-
-    template <typename T2>
-    bool operator == (const Queue<T2>& other) const {
-        if (this->size() != other.size()) {
-            return false;
-        }
-        for (size_t i = 0; i != this->size(); ++i) {
-                if (!(*this)[i] == other[i]) {
-                    return false;
-                }
-        }
-        return true;
+    
+    
+    bool operator == (const Queue<T>& other) const {
+        
+        return this->data == other.data;
     }
 
-    template <typename T2>
-    bool operator != (const Queue<T2>& other) const {
-        if (this->size() != other.size()) {
-            return !false;
-        }
-        for (size_t i = 0; i != this->size(); ++i) {
-                if (!(*this)[i] == other[i]) {
-                    return true;
-                }
-        }
-        return true;
+    
+    bool operator != (const Queue<T>& other) const {
+        return this->data != other.data;
     }
 
     T& operator[](size_t x){
@@ -66,7 +52,7 @@ public:
         return data.at(x);
     }
 
-    ~Queue();
+    ~Queue(){};
 
 
 private:
@@ -75,6 +61,8 @@ private:
 };
 
 int main() {
+
+    // std::queue<int> a;
 
     Queue<int> q;
     for (size_t i = 0; i < 10; i++)
@@ -87,8 +75,17 @@ int main() {
         std::cout << q[i];
     }
 
-    std::deque<int>::iterator  it = q.front();
-    std::cout << *it << '\n';
-    std::cout << q.empty() << '\n';
-    
+    Queue<int> q1;
+    for (size_t i = 0; i < 11; i++)
+    {
+        q1.push(i);
+    }
+
+    for (size_t i = 0; i < 11; i++)
+    {
+        std::cout << q1[i];
+    }
+
+    cout << (q == q1) << "\n";
+    return 0;
 }

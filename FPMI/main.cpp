@@ -1,38 +1,37 @@
 #include<iostream>
 
-//virtual inheritance
+//Exceptions in destructors
 
-struct Granny {
-    int g = 0;
+struct S{
+    S(){
+        std::cout << "S\n";
+    }
+
+    ~S() noexcept(false) {
+        std::cout << "~s\n";
+        if(!std::uncaught_exception())
+            throw 2;
+    }
 };
 
-struct Mom : public virtual Granny
-{
-    int m =1;
-};
+void f(){
+    S s;
 
-struct Dad : public virtual Granny
-{
-    int d =2;
-};
+    throw 1;
+}
 
-struct Son : public Mom, public Dad
-{
-    int s = 3;
-};
+void g(){
+    S s;
+}
 
-// [Mom::g][Mom::m][Dad::d][Sons::s]
-// [mom_ptr][Mom:m][dad_ptr][Dad::d][Sons::s][Granny::g]
 int main(){
-    Son s;
-    Dad* pd = &s;
-    pd->g;
-
-    std::cout << &s << "\n";
-    std::cout << &s.Dad::d << " " << &s.Mom::m << '\n';
-    std::cout << &s.Dad::g << " " << &s.Mom::g << '\n';
-
-    Granny& g = s;
-    std::cout << sizeof(s) << '\n';
-    return 0;
+    try
+    {
+        g();
+    }
+    catch(...)
+    {
+        std::cerr << "caught in main\n" << '\n';
+    }
+    
 }

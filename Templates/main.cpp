@@ -1,71 +1,65 @@
-#include <iostream>
+#include <unordered_map>
+#include <string>
+#include <algorithm>
+#include <string>
 
-template <typename T, int size>
-class StaticArray
-{
+template <typename Key, typename Value>
+class KeyValueStorage {
 private:
-	T m_array[size]{};
+      std::unordered_map<Key, Value> data;
 
 public:
-	T* getArray() { return m_array; }
+    void Insert(const Key& key, const Value& value) {
+        data.insert({key,value});
+        //data[key] = value;
+    }
 
-	const T& operator[](int index) const { return m_array[index]; }
-	T& operator[](int index) { return m_array[index]; }
+    void Remove(const Key& key) {
+        data.erase(key);
+    }
 
-	void print() const;
+    bool Find(const Key& key, Value* const value = nullptr) const;
 };
 
-template <typename T, int size>
-void StaticArray<T, size>::print() const
+
+// Почему-то не работает...
+//
+// template <typename Key, typename Value>
+// bool KeyValueStorage<Key, Value>::Find(const Key& key, Value* value) const {
+//     auto it = std::find(data.begin(), data.end(), key);
+//     auto val = *it;
+//     if (value != nullptr)
+//         value = val->second();
+//     return it != data.end();
+// }
+
+// Ваша реализация функции KeyValueStorage::find будет вставлена сюда:
+
+// template <typename Key, typename Value>
+// bool KeyValueStorage<Key, Value>::Find(const Key& key, Value* const value) const {
+//     auto it = std::find(data.begin(), data.end(), key);
+//     auto val = *it;
+//     if (value != nullptr)
+//         value = &val;
+//     return it != data.end();
+// }
+
+template <typename Key, typename Value>
+bool KeyValueStorage<Key, Value>::Find(const Key &key, Value* const value) const
 {
-	for (int i{ 0 }; i < size; ++i)
-		std::cout << m_array[i] << ' ';
-	std::cout << '\n';
+    auto it = data.find(key);//std::find(data.begin(), data.end(), key);
+    Value val = it->second;
+    return false;
 }
 
-// Partially specialized class
-template <int size>
-class StaticArray<double, size>
-{
-private:
-	double m_array[size]{};
 
-public:
-	double* getArray() { return m_array; }
-
-	const double& operator[](int index) const { return m_array[index]; }
-	double& operator[](int index) { return m_array[index]; }
-
-	void print() const;
-};
-
-// Member function of partially specialized class
-template <int size>
-void StaticArray<double, size>::print() const
-{
-	for (int i{ 0 }; i < size; ++i)
-		std::cout << std::scientific << m_array[i] << ' ';
-	std::cout << '\n';
-}
-
-int main()
-{
-	// declare an integer array with room for 6 integers
-	StaticArray<int, 6> intArray{};
-
-	// Fill it up in order, then print it
-	for (int count{ 0 }; count < 6; ++count)
-		intArray[count] = count;
-
-	intArray.print();
-
-	// declare a double buffer with room for 4 doubles
-	StaticArray<double, 4> doubleArray{};
-
-	for (int count{ 0 }; count < 4; ++count)
-		doubleArray[count] = (4.0 + 0.1 * count);
-
-	doubleArray.print();
-
-	return 0;
+int main() {
+    KeyValueStorage<std::string, int> kv;
+    kv.Insert("hello", 42);
+    kv.Insert("bye", -13);
+    int value = 123;
+    auto res = kv.Find("wrong", &value);  // должно вернуться false, а value не должен меняться
+    // res = kv.Find("bye", &value);  // должно вернуться true, в value должно быть -13
+    // res = kv.Find("hello", nullptr);  // должно вернуться true
+    return 0;
 }
