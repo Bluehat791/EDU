@@ -1,37 +1,30 @@
 #include<iostream>
 
-//Exceptions in destructors
+// reference qualifiers
 
-struct S{
-    S(){
-        std::cout << "S\n";
+struct Data {
+    Data(const std::string& s): data(s) {}
+
+    std::string getData() & {
+        std::cout << "1\n";
+        return data;
+    }
+    std::string getData() && {
+        std::cout << "2\n";
+        return data;
     }
 
-    ~S() noexcept(false) {
-        std::cout << "~s\n";
-        if(!std::uncaught_exception())
-            throw 2;
-    }
+
+private:
+    std::string data;
 };
 
-void f(){
-    S s;
+void f(Data&& x){
 
-    throw 1;
-}
-
-void g(){
-    S s;
+    std::string data = x.getData();
 }
 
 int main(){
-    try
-    {
-        g();
-    }
-    catch(...)
-    {
-        std::cerr << "caught in main\n" << '\n';
-    }
-    
+    Data d("abc");
+    f(std::move(d));
 }

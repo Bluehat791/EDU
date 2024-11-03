@@ -1,32 +1,21 @@
-#include <iostream>
-#include <array>
+#include<iostream>
+#include<cstddef>
+//Alignments
 
-//non_types templates parameters
-
-template<typename T, size_t N>
-class array {
-    T a[N];
-public:
-
+struct alignas(16) S
+{
+    int x;
+    double e;
+    int z;
 };
 
-template<typename T, T* P>
-struct MyStruct {
 
-};
+int main(){
+    
+    std::cout << sizeof(S);
 
-template<typename Field,size_t M, size_t N>
-class Matrix {
+    //since c++11
+    std::cout << alignof(S)<< '\n';
 
-};
-
-template<typename Field,size_t M,size_t N,size_t K>
-Matrix<Field,M,K> operator*(const Matrix<Field,M,N>&,const Matrix<Field,N,K>&);
-
-
-int main() {
-    std::array<int,10> a;
-   // std::array<int,15> b = a;
-
-    return 0;
-} 
+    std::cout << alignof(std::max_align_t) << '\n';
+}
