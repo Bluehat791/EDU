@@ -28,16 +28,26 @@ public:
      void reserve(size_t n){
         if(n<=cap) return;
 
-        T* newarr = AllocR.allocate(n);
+        T* newarr = Alloc.allocate(n);
         //T* newarr = new T[n];
         size_t i =0;
 
         try
         {
-            std::uninitialized_move(arr,arr+sz,newarr);
+            for (size_t i = 0; i < sz; ++i)
+            {
+                std::allocator_traits<T>::construct(alloc,newarr+i,std::move_if_noexcept(arr[i]));
+            }
+            
+            //std::uninitialized_copy(arr,arr+sz,newarr);
         }
         catch(...)
         {   
+            for (size_t j = 0; j < i; ++j)
+            {
+                std::allocator_traits<T>::destroy(alloc,newarr,n);
+            }
+            
             alloc.deallocate(newarr,n);
             //delete[] reinterpret_cast<int8_t*>(newarr);
             throw;
