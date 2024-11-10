@@ -46,6 +46,8 @@
         "typeinfo": "cpp",
         "list": "cpp",
         "map": "cpp",
-        "scoped_allocator": "cpp"
+        "scoped_allocator": "cpp",
+        "variant": "cpp",
+        "any": "cpp"
     }
 }
