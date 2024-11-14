@@ -1,41 +1,37 @@
-#include<iostream>
-#include<vector>
-#include<type_traits>
+#include <fstream>
+#include <iostream>
+#include <string>
 
-//std::enable_if and its usage.
+template <typename A, typename B>
+class D {
+private:
+    A* x;
+    B* y;
 
-template<bool B,typename T = void>
-struct enable_if
-{
-    
+public:
+    D() {
+        x = new A();
+        y = new B();
+    }
+
+    D(const D& other) {
+        x = new A(*other.x);
+        y = new B(*other.y);
+    }
+
+    D& operator = (const D& other) {
+        *x = *other.x;
+        *y = *other.y;
+        return *this;
+    }
+
+    ~D() {
+        delete x;
+        delete y;
+    }
 };
 
-template<typename T>
-struct enable_if<true,T>
-{
-    using type = void;
-};
+int main() {
+   
 
-template<bool B,typename T = void>
-using enable_if_t = typename enable_if<B,T>::type;
-
-
-
-template<typename T, typename = std::enable_if_t<std::is_class_v<T>>>
-void f(const T& x) {
-    std::cout << 1;
-}
-
-void f(...) {
-    std::cout << 2;
-}
-
-int main(){
-
-    std::string s("abc");
-
-    f(s);
-
-    f(1);
-
-}
+}   

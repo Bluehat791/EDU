@@ -45,12 +45,13 @@ struct true_type: public integral_constant<bool, true> {};
 struct false_type: public integral_constant<bool, false> {};
 
 template<typename T, typename... Args>
-struct has_method_construct
+struct is_nothrow_move_constructible
 {
 private:
 
-    template<typename TT, typename... AArgs,
-             typename = decltype(declval<TT>().construct(AArgs()...))>
+    template<typename TT,
+             typename = enable_if_t<noexcept(TT(declval<const TT&>()))>>
+
     static true_type f(int);
 
     template<typename...>
@@ -58,11 +59,12 @@ private:
 
 public:
     //static const bool value = sizeof(f<T,Args...>(0))==sizeof(int);
-    using type = decltype(f<T,Args...>(0));
+    static const bool value = decltype(f<T>(0))::value;
 };
 
 template<typename T, typename... Args>
-bool has_method_construct_v =  std::is_same_v<has_method_construct<T,Args...>::type,true_type>;
+bool is_nothrow_move_constructible_v =  is_nothrow_move_constructible<T,Args...>
+    && noexcept (T(declval<T>()));
 
 struct Test
 {
