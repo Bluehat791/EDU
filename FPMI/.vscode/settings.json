@@ -48,6 +48,8 @@
         "map": "cpp",
         "scoped_allocator": "cpp",
         "variant": "cpp",
-        "any": "cpp"
+        "any": "cpp",
+        "fstream": "cpp",
+        "cinttypes": "cpp"
     }
 }
