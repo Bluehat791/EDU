@@ -2,43 +2,55 @@
 #include<vector>
 using namespace std;
 
-int partition(vector<int> &vec, int low, int high){
+class Solution{
+public:
+    void countSort(vector<int>& nums, const int& exp){
+        int count[10] = {0};
+        vector<int> tmp(nums.size());
+        int i;
 
-    int pivot = vec[high];
-
-    int i = (low - 1);
-
-    for(int j=low;j<=high-1;j++){
-        if(vec[j]<=pivot){
-            i++;
-            swap(vec[i],vec[j]);
+        for(i=0;i<10;i++)
+            count[(nums[i]/exp)%10]++;
+        
+        for (i = 1; i < 10; i++)
+            count[i] += count[i - 1];
+        
+        for (i = nums.size() - 1; i >= 0; i--) {
+            tmp[count[(nums[i] / exp) % 10] - 1] = nums[i];
+            count[(nums[i]  / exp) % 10]--;
         }
+
+        for (i = 0; i < nums.size(); i++)
+            nums[i] = tmp[i];
     }
-
-    swap(vec[i+1],vec[high]);
-
-    return (i+1);
-}
-
-void quickSort(vector<int> &vec, int low, int high) {
-    if (low < high)
-    {
-        int pi = partition(vec,low,high);
-
-        quickSort(vec, low, pi-1);
-        quickSort(vec, pi+1, high);
+    int getMax(vector<int>& nums){
+        int mx = nums[0];
+        for (size_t i = 1; i < nums.size(); i++)
+        {
+            if (mx<nums[i])
+            {
+                mx = nums[i];
+            }
+            
+        }
+        return mx;
     }
-    
-}
+    void sortArray(vector<int>& nums){
+
+        int mx = getMax(nums);
+
+        for(int exp = 1;mx/exp!=0;exp*=10)
+            countSort(nums,exp);
+
+    }
+};
+
 
 int main(){
-    vector<int> vec = {10, 7, 8, 9, 1, 5};
+    vector<int> nums{ 170, 45, 75, 90, 802, 24, 2, 66};
+    Solution sol;
+    sol.sortArray(nums);
 
-    quickSort(vec, 0, vec.size()-1);
-
-    for(auto i : vec) {
-        cout << i << " ";
-    }
-
-    return 0;
+    for(const auto& m: nums)
+    cout << m << "\n";
 }

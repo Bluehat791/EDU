@@ -38,9 +38,9 @@ public:
 
         while (fast!=nullptr)
         {
-            fast = fast->next;;
+            fast = fast->next;
             if(fast!=nullptr){
-                fast->next;
+                fast = fast->next;
                 slow=slow->next;
             }
 
@@ -63,8 +63,8 @@ public:
         } else {
             res = right;
             res->next = merge(left,right->next);
-            return res;
         }
+        return res;
     }
 
     ListNode* sortList(ListNode* head){
