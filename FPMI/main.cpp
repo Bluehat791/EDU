@@ -1,56 +1,28 @@
-#include<iostream>
-#include<vector>
+#include <algorithm>
+#include <iostream>
+#include <vector>
 using namespace std;
 
-class Solution{
-public:
-    void countSort(vector<int>& nums, const int& exp){
-        int count[10] = {0};
-        vector<int> tmp(nums.size());
-        int i;
+void heapSort(int arr[], int n)
+{
+    vector<int> v(arr, arr+n);
 
-        for(i=0;i<10;i++)
-            count[(nums[i]/exp)%10]++;
-        
-        for (i = 1; i < 10; i++)
-            count[i] += count[i - 1];
-        
-        for (i = nums.size() - 1; i >= 0; i--) {
-            tmp[count[(nums[i] / exp) % 10] - 1] = nums[i];
-            count[(nums[i]  / exp) % 10]--;
-        }
+    make_heap(v.begin(), v.end());
 
-        for (i = 0; i < nums.size(); i++)
-            nums[i] = tmp[i];
-    }
-    int getMax(vector<int>& nums){
-        int mx = nums[0];
-        for (size_t i = 1; i < nums.size(); i++)
-        {
-            if (mx<nums[i])
-            {
-                mx = nums[i];
-            }
-            
-        }
-        return mx;
-    }
-    void sortArray(vector<int>& nums){
+    sort_heap(v.begin(), v.end());
 
-        int mx = getMax(nums);
+    copy(v.begin(),v.end(),arr);
+}
 
-        for(int exp = 1;mx/exp!=0;exp*=10)
-            countSort(nums,exp);
-
-    }
-};
-
-
-int main(){
-    vector<int> nums{ 170, 45, 75, 90, 802, 24, 2, 66};
-    Solution sol;
-    sol.sortArray(nums);
-
-    for(const auto& m: nums)
-    cout << m << "\n";
+int main()
+{
+    int arr[] = { 60, 20, 40, 70, 30, 10 };
+    int n = sizeof(arr) / sizeof(arr[0]);
+ 
+    heapSort(arr, n);
+ 
+    cout << "Sorted array is \n";
+    for (int i = 0; i < n; ++i)
+        cout << arr[i] << " ";
+    cout << endl;
 }
