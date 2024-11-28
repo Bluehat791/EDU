@@ -100,7 +100,8 @@ public:
             if (it2 == heap.end())
             {
                 it1++;
-            } else if ((*it1)->degree < (*it2)->degree)
+            } 
+            else if ((*it1)->degree < (*it2)->degree)
             {
                 it1++;
                 it2++;
@@ -109,12 +110,14 @@ public:
                     it3++;
                 }
                 
-            } else if (it3!=heap.end()&&(*it1)->degree == (*it2)->degree && (*it1)->degree == (*it3)->degree)
+            } 
+            else if (it3 != heap.end()&&(*it1)->degree == (*it2)->degree && (*it1)->degree == (*it3)->degree)
             {
                 it1++;
                 it2++;
                 it3++;
-            } else if ((*it1)->degree == (*it2)->degree)
+            } 
+            else if ((*it1)->degree == (*it2)->degree)
             {
                 Node* temp;
                 *it1 = mergeBTrees(*it1, *it2);
