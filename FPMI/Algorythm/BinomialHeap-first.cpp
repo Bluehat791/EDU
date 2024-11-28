@@ -150,3 +150,14 @@ public:
         return count;
     }
 };
+
+int main(){
+    BinomialHeap heap;
+    for (size_t i = 0; i < 10; i++)
+    {
+        heap.insert(i);
+    }
+    heap._consolidate();
+
+    std::cout << "Hello\n";
+}
