@@ -11,89 +11,39 @@ struct TreeNode
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x),left(left), right(right) {}
 };
 
-class binaryTree {
-
-    TreeNode* root;
-    TreeNode* left;
-    TreeNode* right;
-
-    TreeNode* insert(TreeNode* root,int key, int val, bool isLeft)
-    {   
-        if(root == nullptr)
-            return new TreeNode(key);
-        if(key>root->val)
-            return insert(root->right,key,val,isLeft);
-        else if(key>root->val)
-            return insert(root->right,key,val,isLeft);
-        else if(isLeft)
-            return root->left= new TreeNode(val);
-        else
-            return root->right = new TreeNode(val);        
-    }
-
-public:
-    void insert(int key, int val, bool isLeft){
-        insert(root,key,val, isLeft);
-    }
-
-    void setRoot(int key){
-        root = new TreeNode(key);
-    }
-
-    TreeNode* getRoot(){
-        return root;
-    }
-};
 
 class Solution {
-    binaryTree btree;
-
-    TreeNode* createSubTree(vector<int>& nums1,vector<int>& nums2)
-    {   
-        int root = nums1[0];       
-        if(!nums2.empty()){
-            TreeNode* leftchild = new TreeNode(nums1[2]?nums1[1]:nums2[1]);
-            TreeNode* rightchild = new TreeNode(!nums1[2]?nums1[1]:nums2[1]);
-            return new TreeNode(root,leftchild,rightchild);
-        } else {
-            TreeNode* child = new TreeNode(nums1[1]);
-            if(nums1[2]){
-                return new TreeNode(root,child,nullptr);
-            } else {
-                return new TreeNode(root,nullptr,child);
-            }
-        }
-    }
-
-    void merge(TreeNode* node1, TreeNode* node2)
-    {
-        if(node2->left->val == node1->val)
-        {
-            delete node2->left;
-            node2->left = node1;
-        } else if (node2->right->val == node1->val) {
-            delete node2->right;
-            node2->right = node1;
-        } else if (node1->left->val == node2->val) {
-            delete node1->left;
-            node1->left = node2;
-        } else if (node1->right->val == node2->val) {
-            delete node1->right;
-            node1->right = node2;
-        }
-    }
     
 public:
     TreeNode* createBinaryTree(vector<vector<int>>& descriptions) {
-        
-        sort(descriptions.begin(),descriptions.end());
-        vector<TreeNode*> tmp;
-        for(int i = 0; i < descriptions.size()-2;i+=2)
-        {
-            tmp.push_back(createSubTree(descriptions[i],descriptions[i+1]));
-        }
+        const int N = 100001;
+        bitset<N> seen = 0;
+        int root = -1;
+        int parent[N] = {0};
+        TreeNode* node[N] = {nullptr};
 
-        return btree.getRoot();
+        for(auto& d: descriptions){
+            int tmp_p = d[0], tmp_c = d[1], l = d[2];
+            if (!seen[tmp_p])
+            {
+                node[tmp_p] = new TreeNode(tmp_p);
+                seen[tmp_p] = 1;
+                if(parent[tmp_p] == 0)
+                    root =tmp_p;
+            }
+            if(!seen[tmp_c]) {
+                node[tmp_c] = new TreeNode(tmp_c);
+                seen[tmp_c]=1;
+            }
+            parent[tmp_c] = tmp_p;
+            if(l)
+                node[tmp_p]->left = node[tmp_c];
+            else
+                node[tmp_p]->right = node[tmp_c];
+        }
+        while(parent[root] != 0)
+            root = parent[root];
+        return node[root];
     }
 };
 
