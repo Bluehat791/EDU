@@ -141,9 +141,17 @@ public:
 int main() {
     Solution sol;
 
-    ListNode lst;
+    TreeNode* node1 = new TreeNode(2);
+    TreeNode* node2 = new TreeNode(1);;
+    node1->left = node2;
+    node1->right = nullptr;
+    TreeNode* node3 = new TreeNode(2);
+    node2->right = node3;
+    TreeNode* node4 = nullptr;
+    node2->left = node4;
+    
 
-    //TreeNode* node = sol.sortedArrayToBST(tmp);
+    vector<int> tmp = sol.findMode(node1);
 
     cout << "hello\n";
 }
