@@ -26,4 +26,4 @@ class AdvancedVector : public std::vector<T>
         }
         return this->at(i);
     }
-}
+};
