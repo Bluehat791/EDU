@@ -2,44 +2,30 @@
 using namespace std;
 
 class Solution {
-    
 public:
-    string convert(string s, int numRows) {
-        if(numRows<=1)
+    bool isSubsequence(string s, string t) {
+        if (t.size()<s.size())
         {
-            return s;
+            return false;
         }
-
-        vector<string> rows(numRows);
-        int currentRow =0;
-        bool goingDown = false;
-
-        for(char c: s)
+        
+        for (size_t i = 0; i < s.size(); i++)
         {
-            rows[currentRow]+=c;
-
-            if (currentRow == 0 || currentRow == numRows -1)
+            for (size_t j = i; i < t.size(); i++)
             {
-                goingDown = !goingDown;
+                /* code */
             }
-            currentRow +=goingDown ? 1: -1;
+            
         }
-
-        s.clear();
-
-        for(const string& row : rows)
-        {
-            s+=row;
-        } 
-        return s;
+        
     }
 };
 
 int main()
-{
-
+{   
     Solution sol;
-    string s = "PAYPALISHIRING";
-    int n = 3;
-    cout << sol.convert(s,n) << endl;
+    string s;
+    string t;
+
+    cout << sol.isSubsequence(s,t) << endl;
 }
