@@ -2,74 +2,140 @@
 using namespace std;
 
 class Solution {
-    void findAllConcatenation(unordered_set<string>& all,vector<string>& word)
+    class sudoku_board
     {   
-        vector<int> tmp;
-        for (size_t i = 0; i < word.size(); i++)
+    public:
+        struct backet
         {
-            tmp.push_back(i);
-        }
-        
-        vector<vector<int>> comb;
+            unordered_map<char,pair<int,int>> squares;
+            bool insert(char& x , int i, int j)
+            {   
+                if (x=='.')
+                {
+                    return true;
+                }
+                
+                squares.insert({x,{i,j}});
 
-        do {
-            comb.push_back(tmp);
-        } while (std::next_permutation(tmp.begin(), tmp.end()));
-
-        for (size_t i = 0; i < comb.size(); i++)
-        {
-            string s = "";
-            for (size_t j = 0; j < comb[0].size(); j++)
-            {
-                s+=word[comb[i][j]];
+                if (auto iter = find_if(squares.begin(),squares.end(),[&x](pair<char,pair<int,int>> value){ return value.first == x; });iter !=squares.end())
+                {
+                    return false;
+                }
+                
+                
+                return true;
             }
-            all.insert(s);
-        }
-    }
 
-    void findAllOccurrences(const std::string& text, const std::string& pattern, unordered_set<int>& result) {
-        size_t pos = text.find(pattern, 0); // Начинаем поиск с позиции 0
-
-        while (pos != std::string::npos) {
-          result.insert(pos);
-          pos = text.find(pattern, pos + 1); // Ищем следующее вхождение, начиная с позиции после текущего
-        }
-
-    }
-
-public:
-    vector<int> findSubstring(string s, vector<string>& words) {
-        for (size_t i = 0; i < words.size(); i++)
-        {
-            if(auto x = s.find(words[i],0);x==string::npos)
+            bool operator==(const backet& other)
             {
-                return vector<int>{};
+                return this->squares == other.squares;
             }
             
+        };
+
+        vector<backet> backets;
+
+        sudoku_board()
+        {
+            backets.resize(9);
+            
+        }
+
+        bool validCheck()
+        {
+            
+            for (size_t i = 0; i < 9; i++)
+            {   
+                for (size_t j = 0; j < 9; j++)
+                {
+                    if (backets[i].squares.empty() || backets[j].squares.empty())
+                    {
+                        continue;
+                    }
+                    
+                    if(i!=j && backets[i]==backets[j])
+                    {
+                        return false;
+                    }
+                }
+                
+            }
+            return true;
+        }
+    };
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        sudoku_board s_board;
+        for (size_t i = 0; i < 9; i++)
+        {
+            for (size_t j = 0; j < 9; j++)
+            {
+                if(i<3&&j<3)
+                {
+                    if(!(s_board.backets[0].insert(board[i][j],i,j)))
+                    {
+                        return false;
+                    }
+                } else if (i<3 && (j>2 && j < 6))
+                {
+                    if(!(s_board.backets[1].insert(board[i][j],i,j)))
+                    {
+                        return false;
+                    }
+                } else if(i<3 && (j>5 && j<9 ))
+                {
+                    if(!(s_board.backets[2].insert(board[i][j],i,j)))
+                    {
+                        return false;
+                    }
+                } else if(i>2 && i < 6 && j<3)
+                {
+                    if(!(s_board.backets[3].insert(board[i][j],i,j)))
+                    {
+                        return false;
+                    }
+                } else if(i>2 && i < 6 && (j>2 && j < 6))
+                {
+                    if(!(s_board.backets[4].insert(board[i][j],i,j)))
+                    {
+                        return false;
+                    }
+                } else if(i>2 && i < 6  && (j>5 && j<9 ))
+                {
+                    if(!(s_board.backets[5].insert(board[i][j],i,j)))
+                    {
+                        return false;
+                    }
+                } else if(i>5 && i<9  && j<3)
+                {
+                    if(!(s_board.backets[6].insert(board[i][j],i,j)))
+                    {
+                        return false;
+                    }
+                } else if(i>5 && i<9  && (j>2 && j < 6))
+                {
+                    if(!(s_board.backets[7].insert(board[i][j],i,j)))
+                    {
+                        return false;
+                    }
+                } else if(i>5 && i<9  && (j>5 && j<9 ))
+                {
+                    if(!(s_board.backets[8].insert(board[i][j],i,j)))
+                    {
+                        return false;
+                    }
+                }
+            }   
         }
         
-        unordered_set<string> all_word;
-        findAllConcatenation(all_word,words);
-        unordered_set<int> result;
-        for (auto iter = all_word.begin();iter!=all_word.end();iter++)
-        {   
-            findAllOccurrences(s,*iter,result);
-        }
-        if (result.empty())
-        {
-            return vector<int>{};
-        }
-        //result.erase(unique(result.begin(),result.end()),result.end());
-        vector<int> true_result(result.begin(),result.end());
-
-        return true_result;
+        return s_board.validCheck();
     }
 };
 
 int main()
 {
     Solution sol;
-    string s = "aaa";
-    vector<string> tmp = {"a","a"};
-    vector<int> result = sol.findSubstring(s,tmp);
+    vector<vector<char>> tmp = {{'.','.','4','.','.','.','6','3','.'},{'.','.','.','.','.','.','.','.','.'},{'5','.','.','.','.','.','.','9','.'},{'.','.','.','5','6','.','.','.','.'},{'4','.','3','.','.','.','.','.','1'},{'.','.','.','7','.','.','.','.','.'},{'.','.','.','5','.','.','.','.','.'},{'.','.','.','.','.','.','.','.','.'},{'.','.','.','.','.','.','.','.','.'}};
+
+    cout << sol.isValidSudoku(tmp) << endl;
 }
