@@ -5,6 +5,8 @@ class Solution {
     class sudoku_board
     {   
     public:
+        static unordered_set<char,pair<int,int>> all_squares;
+    public:
         struct backet
         {
             unordered_map<char,pair<int,int>> squares;
@@ -15,9 +17,14 @@ class Solution {
                     return true;
                 }
                 
-                squares.insert({x,{i,j}});
-
                 if (auto iter = find_if(squares.begin(),squares.end(),[&x](pair<char,pair<int,int>> value){ return value.first == x; });iter !=squares.end())
+                {
+                    return false;
+                }
+
+                squares.insert({x,{i,j}});
+                all_squares.insert({x,{i,j}});
+                if (!tmp.second)
                 {
                     return false;
                 }
@@ -39,28 +46,6 @@ class Solution {
         {
             backets.resize(9);
             
-        }
-
-        bool validCheck()
-        {
-            
-            for (size_t i = 0; i < 9; i++)
-            {   
-                for (size_t j = 0; j < 9; j++)
-                {
-                    if (backets[i].squares.empty() || backets[j].squares.empty())
-                    {
-                        continue;
-                    }
-                    
-                    if(i!=j && backets[i]==backets[j])
-                    {
-                        return false;
-                    }
-                }
-                
-            }
-            return true;
         }
     };
 public:
@@ -128,7 +113,7 @@ public:
             }   
         }
         
-        return s_board.validCheck();
+        return true;
     }
 };
 
